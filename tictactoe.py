@@ -7,9 +7,9 @@ import time
 board = ["","","","","","","","",""]
 MAGIC_SQUARE = [4, 9, 2, 3, 5, 7, 8, 1, 6]
 
-player = True
+player = True #i used a bool for this in a desperate attempt to fix bugs, doesn't affect the program just doesn't make sense
 over = False
-mode = "2P"
+mode = "2P" #default to 2 player mode. could be changed if we feel like it
 
 def check_win(player):
     """
@@ -104,8 +104,14 @@ def reset():
     for button in buttons:
         button.configure(text = "")
     board = ["","","","","","","","",""]
-    text.configure(text = "X to play", fg = "white")
+    if mode == "2P":
+        text.configure(text = "X to play", fg = "white")
+    elif mode == "easy":
+        text.configure(text = "Easy Mode", fg = "white")
+    elif mode == "hard":
+        text.configure(text = "Hard Mode", fg = "white")
 
+        
 def close():
     """
     just adds a close game button. nothing special
@@ -119,11 +125,13 @@ def twoPlayer():
     reset()
     global mode
     mode = "2P"
+    text.configure(text = "X to play", fg = "white")
 
 def easyMode():
     reset()
     global mode
     mode = "easy"
+    text.configure(text = "Easy Mode", fg = "white")
 
 #TO IMPLEMENT
 """def hardmode(): 
