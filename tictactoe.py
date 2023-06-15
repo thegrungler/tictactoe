@@ -48,12 +48,26 @@ def click(i):
     if type(check_win("X")) == str:
         over = True
         text.configure(text = "TIE", fg = "red")
+
+def reset():
+    global over
+    global player
+    global board
+    over = False
+    player = True
+    for button in buttons:
+        button.configure(text = "")
+    board = ["","","","","","","","",""]
+    text.configure(text = "X to play", fg = "white")
+
+def close():
+    game.destroy()
         
 game = Tk(className = "Tic Tac Toe")
 game.geometry("600x700")
 game.configure(bg = "#1a1a1a")
 game.title("Tic Tac Toe")
-game.resizable(False, False)
+game.minsize(400, 450)
 
 photo = PhotoImage(file = "tictactoe_large.png")
 game.iconphoto(False, photo)
@@ -72,6 +86,12 @@ buttons.append(Button(game, text = "", font = ("Arial", 40), bg = "#1f1f1f", fg 
 
 text = Label(game, text = "X to play", bg = "#1a1a1a", fg = "white", anchor = "center", font = ("Arial", 20))
 text.grid(row = 3, column = 1, sticky = "EW", padx = 5, pady = 5)
+
+reset_button = Button(game, text = "Reset", bg = "#1f1f1f", fg = "yellow", anchor = "center", width = 10, command = reset)
+reset_button.grid(column = 2, row = 3)
+
+close_button = Button(game, text = "Quit", bg = "#1f1f1f", fg = "red", anchor = "center", width = 10, command = close)
+close_button.grid(column = 0, row = 3)
 
 buttons[0].grid(column = 0, row = 0, sticky = "NSEW")
 buttons[1].grid(column = 1, row = 0, sticky = "NSEW")
