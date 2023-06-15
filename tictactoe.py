@@ -31,7 +31,7 @@ def click(i):
     if board[i] == "":
         if player:
             board[i] = "X"
-            buttons[i].configure(text = "X")
+            buttons[i].configure(text = "X", fg = "green")
             text.configure(text = "O to play")
             player = not player
             if check_win("X"):
@@ -39,7 +39,7 @@ def click(i):
                 text.configure(text = "X WINS!", fg = "green")
         else:
             board[i] = "O"
-            buttons[i].configure(text = "O")
+            buttons[i].configure(text = "O", fg = "cyan")
             text.configure(text = "X to play")
             player = not player
             if check_win("O"):
@@ -49,11 +49,14 @@ def click(i):
         over = True
         text.configure(text = "TIE", fg = "red")
         
-game = Tk()
+game = Tk(className = "Tic Tac Toe")
 game.geometry("600x700")
 game.configure(bg = "#1a1a1a")
 game.title("Tic Tac Toe")
 game.resizable(False, False)
+
+photo = PhotoImage(file = "tictactoe_large.png")
+game.iconphoto(False, photo)
 
 buttons = []
 
