@@ -13,19 +13,19 @@ def turn(board: list, player_turn: int, opening: bool):
             return other_opener_response(board)
     funny_state = funny_condition(board)
     if funny_state[2]:
-        print("condition 1")
+        #print("condition 1")
         return funny_state
     funny_state_2 = funny_condition_2(board)
     if funny_state_2[2]:
-        print("condition 2")
+        #print("condition 2")
         return funny_state_2
     if find_attack_space(board)[0]:
-        print("attacking")
+        #print("attacking")
         attack_space = attack(board)
-        print(attack_space)
+        #print(attack_space)
         return attack_space
     if find_guard_space(board)[0]:
-        print("guarding")
+        #print("guarding")
         return guard(board)
     
 def attack(board):
