@@ -2,7 +2,7 @@
 
 from tkinter import *
 import random
-import time
+import algorithm
 
 board = ["","","","","","","","",""]
 MAGIC_SQUARE = [4, 9, 2, 3, 5, 7, 8, 1, 6]
@@ -10,6 +10,8 @@ MAGIC_SQUARE = [4, 9, 2, 3, 5, 7, 8, 1, 6]
 player = True #i used a bool for this in a desperate attempt to fix bugs, doesn't affect the program just doesn't make sense
 over = False
 mode = "2P" #default to 2 player mode. could be changed if we feel like it
+debugMode = False
+opening = True
 
 def check_win(player):
     """
@@ -34,6 +36,8 @@ def click(i):
     makes the game buttons do stuff depending on whether the space is available and what mode the game is on
     """
     global over
+    global board
+    global opening
     if over:
         return
     if board[i] == "":
@@ -42,11 +46,31 @@ def click(i):
         elif mode == "easy":
             ai_turn_easy(i)
         elif mode == "hard":
-            pass 
-            #ai_turn_hard(i) to implement
+            hard_turn(i)
+        opening = False
     if type(check_win("X")) == str:
         over = True
         text.configure(text = "TIE", fg = "red")
+
+def hard_turn(i):
+    global over
+    global board
+    board[i] = "X"
+    buttons[i].configure(text = "X", fg = "green")
+    if (check_win("X")):
+            over = True
+            text.configure(text = "X WINS!", fg = "green")
+            return
+    response = algorithm.turn(board, i, opening)
+    if type(response) == tuple:
+        board = response[0]
+        buttons[response[1]].configure(text = "O", fg = "cyan")
+        if (check_win("O")):
+            over = True
+            text.configure(text = "O WINS!", fg = "cyan")
+            return
+    else:
+        random_space()
 
 def two_player_turn(i):
     global player
@@ -73,6 +97,10 @@ def ai_turn_easy(i):
     global over
     board[i] = "X"
     buttons[i].configure(text = "X", fg = "green")
+    random_space()
+    
+def random_space():
+    global over
     if check_win("X"):
         over = True
         text.configure(text = "X WINS!", fg = "green")
@@ -91,19 +119,23 @@ def ai_turn_easy(i):
                 text.configure(text = "O WINS!", fg = "green")
                 return
             break
+    return x
 
 def reset():
     """
     resets everything to default values so the program doesn't become useless when a game ends
     """
+    global opening
     global over
     global player
     global board
     over = False
     player = True
+    opening = True
     for button in buttons:
         button.configure(text = "")
     board = ["","","","","","","","",""]
+    debug()
     if mode == "2P":
         text.configure(text = "X to play", fg = "white")
     elif mode == "easy":
@@ -111,7 +143,7 @@ def reset():
     elif mode == "hard":
         text.configure(text = "Hard Mode", fg = "white")
 
-        
+
 def close():
     """
     just adds a close game button. nothing special
@@ -133,12 +165,12 @@ def easyMode():
     mode = "easy"
     text.configure(text = "Easy Mode", fg = "white")
 
-#TO IMPLEMENT
-"""def hardmode(): 
+
+def hardMode(): 
     reset()
     global mode
     mode = "hard"
-"""
+    text.configure(text = "Hard Mode", fg = "white")
 
 """
 creates game board
@@ -185,6 +217,9 @@ twoPlayer_button.grid(column = 0, row = 4)
 easy_button = Button(game, text = "1P Easy", bg = "#1f1f1f", fg = "white", anchor = "center", width = 10, command = easyMode)
 easy_button.grid(column = 1, row = 4)
 
+hard_button = Button(game, text = "1P Hard", bg = "#1f1f1f", fg = "white", anchor = "center", width = 10, command = hardMode)
+hard_button.grid(column = 2, row = 4)
+
 """
 also maybe could be done in a loop i just didnt feel like figuring out how to do it. will implement later
 """
@@ -198,6 +233,13 @@ buttons[6].grid(column = 0, row = 2, sticky = "NSEW")
 buttons[7].grid(column = 1, row = 2, sticky = "NSEW")
 buttons[8].grid(column = 2, row = 2, sticky = "NSEW")
 
+def debug():
+    if debugMode:
+        j = 0
+        while j < 9:
+            buttons[j].configure(text = str(j), fg = "white")
+            j+=1
+
 """
 forces grid spaces to stay consistent with each other so the game looks pretty
 """
@@ -209,5 +251,7 @@ game.grid_rowconfigure(4, weight = 1)
 game.grid_columnconfigure(0, weight = 1)
 game.grid_columnconfigure(1, weight = 1)
 game.grid_columnconfigure(2, weight = 1)
+
+debug()
 
 game.mainloop()
