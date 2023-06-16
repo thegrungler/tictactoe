@@ -27,6 +27,18 @@ def turn(board: list, player_turn: int, opening: bool):
     if find_guard_space(board)[0]:
         #print("guarding")
         return guard(board)
+    freeCorner = False
+    for corner in corners:
+        if board[corner] == "":
+            freeCorner = True
+    if freeCorner: 
+        possible_tile = randint(0, 3)
+        while board[corners[possible_tile]] != "":
+            possible_tile = randint(0, 3)
+        chosen_tile = corners[possible_tile]
+
+        board[chosen_tile] = "O"
+        return (board, chosen_tile)
     
 def attack(board):
     space = find_attack_space(board)[1]
